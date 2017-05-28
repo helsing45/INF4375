@@ -6,6 +6,7 @@
 package com.uqam.inf4375.tp;
 
 import com.uqam.inf4375.tp.model.Event;
+import com.uqam.inf4375.tp.utils.DateUtils;
 import com.uqam.inf4375.tp.utils.JsonReader;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,10 +66,39 @@ public class Controller {
                             evt.generateLatLng();
                         }
                         events.add(evt);
-                        System.out.println(evt.toString());
                     }
                 }
                 in.close();
+                
+                Collections.sort(events, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event o1, Event o2) {
+                      return o1.getDate().compareTo(o2.getDate());
+                    }
+                });
+                ArrayList<String> unformatted = new ArrayList<>();
+                for (Event event : events) {
+                    if(!DateUtils.printDates(event.getDate())){
+                        unformatted.add(event.getDate());
+                    }
+                }
+                
+                System.out.println((events.size() - unformatted.size()) + " / " + events.size() + " formatted dates");
+                for (String string : unformatted) {
+                    System.out.println(string);
+                }
+                
+                /*int unformattedCount = 0;
+                for (Event event : events) {
+                    if(DateUtils.getDate(event.getDate()).isEmpty()){
+                        System.out.println(event.getDate());
+                        unformattedCount ++;
+                    }
+                }
+                System.out.println(unformattedCount +"/"+ events.size() +" unformatted date.");
+                */
+                
+                
                 return events;
             }
             
