@@ -5,7 +5,6 @@
 */
 package com.uqam.inf4375.tp.utils;
 
-import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -38,7 +36,7 @@ public class DateUtils {
                 .replaceAll("1er", "1");
     }
     
-    public static ArrayList<Date> getDate(String date){
+    public static ArrayList<Date> getDates(String date){
         ArrayList<Date> dates = getRightDate(date);
         if(dates == null){
              if(preformatDate(date).isEmpty()) return null;
@@ -74,7 +72,7 @@ public class DateUtils {
     
     public static boolean printDates(String stringDate){
         System.out.println("Trying to format: "+ stringDate);
-        ArrayList<Date> dates = getDate(stringDate);
+        ArrayList<Date> dates = getDates(stringDate);
         if(dates == null){
             System.out.println("No date to format");
             System.out.println("----------------------------");
@@ -90,5 +88,54 @@ public class DateUtils {
         }
         System.out.println("----------------------------");
         return true;
+    }   
+    
+    /**
+     * @return la liste de toute les dates qui ce trouve entre les deux dates.
+     */
+    public static ArrayList<Date> getRangeDates(Date firstDate, Date secondDate){
+        ArrayList<Date> dates = new ArrayList<>();
+        if(firstDate.getTime() > secondDate.getTime())return  new ArrayList<>();
+        Calendar first = Calendar.getInstance();
+        first.setTime(firstDate);
+        
+        while(!first.getTime().equals(secondDate)){
+            dates.add(first.getTime());
+            first.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        dates.add(secondDate);
+        return dates;
+    }
+    
+    public static Date getDate(String stringDate){
+        SimpleDateFormat dt = new SimpleDateFormat("dd MMMM yyyy", new Locale("fr"));
+        try {
+            return dt.parse(stringDate);
+        } catch (ParseException ex) {
+            dt = new SimpleDateFormat("dd MMMM", new Locale("fr"));
+            try {
+                return formattedToThisYear(dt.parse(stringDate));
+            } catch (ParseException ex2) {
+                return null;
+            }
+        }
+    }
+    
+    public static Date getFormattedDate(String stringDate, String pattern){
+        SimpleDateFormat dt = new SimpleDateFormat(pattern);
+        try {
+            return dt.parse(stringDate);
+        } catch (ParseException ex) {
+            Logger.getLogger(DateUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public static Date formattedToThisYear(Date date){
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        calendar.setTime(date);
+        calendar.set(Calendar.YEAR,year);
+        return calendar.getTime();
     }
 }

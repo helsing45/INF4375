@@ -6,11 +6,15 @@
 package com.uqam.inf4375.tp.model;
 
 import com.uqam.inf4375.tp.utils.CSVUtils;
+import com.uqam.inf4375.tp.utils.DateUtils;
 import com.uqam.inf4375.tp.utils.JsonReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -26,37 +30,38 @@ public class Event {
     private String address;
     private double lat;
     private double lng;
+    private ArrayList<Date> dates;
 
     public Event(String attributesCSV, int attributeCount) {
        String[] attributes = CSVUtils.read(attributesCSV);
         for (int i = 0; i < attributes.length; i++) {
             switch(i){
                 case 0:
-                    this.id = Integer.valueOf(attributes[i]);
+                    setId(Integer.valueOf(attributes[i]));
                     break;
                 case 1:                    
-                    this.name = attributes[i];
+                    setName(attributes[i]);
                     break;
                 case 2:
-                    this.descriptions = attributes[i];
+                    setDescriptions(attributes[i]);
                     break;
                 case 3:
-                    this.arrondissement = attributes[i];
+                    setArrondissement(attributes[i]);
                     break;
                 case 4:
-                    this.isFree = attributes[i];
+                    setIsFree(attributes[i]);
                     break;
                 case 5:
-                    this.eventType = attributes[i];
+                    setEventType(attributes[i]);
                     break;
                 case 6:
-                    this.isOutside = attributes[i];
+                    setIsOutside(attributes[i]);
                     break;
                 case 7:
-                    this.date = attributes[i];
+                    setDate(attributes[i]);
                     break;
                 case 8:
-                    this.address = attributes[i];
+                    setAddress(attributes[i]);
                     break;
             }
         }
@@ -66,45 +71,98 @@ public class Event {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescriptions() {
         return descriptions;
     }
 
+    public void setDescriptions(String descriptions) {
+        this.descriptions = descriptions;
+    }
+
     public String getArrondissement() {
         return arrondissement;
+    }
+
+    public void setArrondissement(String arrondissement) {
+        this.arrondissement = arrondissement;
     }
 
     public String getIsFree() {
         return isFree;
     }
 
+    public void setIsFree(String isFree) {
+        this.isFree = isFree;
+    }
+
     public String getEventType() {
         return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
     }
 
     public String getIsOutside() {
         return isOutside;
     }
 
+    public void setIsOutside(String isOutside) {
+        this.isOutside = isOutside;
+    }
+
     public String getDate() {
         return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+        this.dates = DateUtils.getRightDate(date);
     }
 
     public String getAddress() {
         return address;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public double getLat() {
         return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
     public double getLng() {
         return lng;
     }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public ArrayList<Date> getDates() {
+        return dates;
+    }
+
+    public void setDates(ArrayList<Date> dates) {
+        this.dates = dates;
+    }   
     
     public void generateLatLng(){
         try {
@@ -114,6 +172,19 @@ public class Event {
         } catch (ParseException | IOException ex) {
             Logger.getLogger(Event.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public boolean inRange(Date startDate, Date endDate){
+        ArrayList<Date> rangeDates = DateUtils.getRangeDates(startDate, endDate);
+        for (Date rangeDate : rangeDates) {
+            if(dates == null) return false;
+            for (Date eventDate : dates) {
+                if(org.apache.commons.lang.time.DateUtils.isSameDay(rangeDate, eventDate)){
+                    return true;
+                }
+            }            
+        }
+        return false;
     }
     
     @Override

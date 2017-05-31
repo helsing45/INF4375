@@ -16,6 +16,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.math.NumberUtils;
+import static com.uqam.inf4375.tp.utils.DateUtils.getRangeDates;
+import static com.uqam.inf4375.tp.utils.DateUtils.getDate;
+import static com.uqam.inf4375.tp.utils.DateUtils.formattedToThisYear;
 
 /**
  *
@@ -237,50 +240,13 @@ public enum CustomDateFormat {
             return getRangeDates(startDate, endDate);
         }
         
-    };
-    
+    };    
     
     private String pattern;
     
     private CustomDateFormat(String pattern) {
         this.pattern = pattern;
-    }
-    
-    private static Date formattedToThisYear(Date date){
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        calendar.setTime(date);
-        calendar.set(Calendar.YEAR,year);
-        return calendar.getTime();
-    }
-    
-    private static Date getDate(String stringDate){
-        SimpleDateFormat dt = new SimpleDateFormat("dd MMMM yyyy", new Locale("fr"));
-        try {
-            return dt.parse(stringDate);
-        } catch (ParseException ex) {
-            dt = new SimpleDateFormat("dd MMMM", new Locale("fr"));
-            try {
-                return formattedToThisYear(dt.parse(stringDate));
-            } catch (ParseException ex2) {
-                return null;
-            }
-        }
-    }
-    
-    private static ArrayList<Date> getRangeDates(Date firstDate, Date secondDate){
-        ArrayList<Date> dates = new ArrayList<>();
-        if(firstDate.getTime() > secondDate.getTime())return  new ArrayList<>();
-        Calendar first = Calendar.getInstance();
-        first.setTime(firstDate);
-        
-        while(!first.getTime().equals(secondDate)){
-            dates.add(first.getTime());
-            first.add(Calendar.DAY_OF_YEAR, 1);
-        }
-        dates.add(secondDate);
-        return dates;
-    }
+    }   
     
     public Pattern getPattern() {
         return Pattern.compile(pattern);
