@@ -37,7 +37,13 @@ public class Controller {
     @RequestMapping("/hello")
             String sayHello() {
                 return "Hello World!";
-            }
+            }    
+    
+            
+    @RequestMapping(value = "activites-375e", params ={"de","au"} ,method = RequestMethod.GET)
+    String getEvents(@RequestParam("de") String startDate, @RequestParam("au") String endDate){
+        return "You are looking for a event between "+ startDate + " and " + endDate;
+    }
             
             @RequestMapping(value = "/events", method = RequestMethod.GET)
             String showEvents(){
