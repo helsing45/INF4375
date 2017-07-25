@@ -1,0 +1,328 @@
+#%RAML 1.0
+title: "INF4375"
+description: "No description"
+version: "1.0.0"
+protocols:
+- "HTTP"
+baseUri: "http://localhost:8080"
+mediaType:
+- "application/json"
+types:
+  Event:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        required: false
+      name:
+        type: "string"
+        required: false
+      descriptions:
+        type: "string"
+        required: false
+      arrondissement:
+        type: "string"
+        required: false
+      isFree:
+        type: "string"
+        required: false
+      eventType:
+        type: "string"
+        required: false
+      isOutside:
+        type: "string"
+        required: false
+      date:
+        type: "string"
+        required: false
+      address:
+        type: "string"
+        required: false
+      lat:
+        type: "number"
+        required: false
+      lng:
+        type: "number"
+        required: false
+      dates:
+        type: "array"
+        required: false
+        items:
+          type: "date-only"
+  BixiStation:
+    type: "object"
+    properties:
+      id:
+        type: "number"
+        description: "Idenfiant unique de la station"
+        required: false
+      name:
+        type: "string"
+        description: "Nom de la station"
+        required: false
+      terminalId:
+        type: "string"
+        description: "Identifiant du terminale de la station,"
+        required: false
+      state:
+        type: "integer"
+        description: "État de la station"
+        required: false
+      isBlocked:
+        type: "boolean"
+        description: "Valeur booléenne (true ou false) spécifiant si la station est\
+          \ bloquée"
+        required: false
+      isSuspend:
+        type: "boolean"
+        description: "Valeur booléenne (true ou false) spécifiant si la station est\
+          \ suspendue,"
+        required: false
+      isOffLine:
+        type: "boolean"
+        description: "Valeur booléenne (true ou false) spécifiant si la station est\
+          \ affichée comme hors service,"
+        required: false
+      lastUpdate:
+        type: "date-only"
+        description: "horodatage de la dernière mise à jour des données en nombres\
+          \ de millisecondes depuis le 1 janvier 1970."
+        required: false
+      lastServerCommunication:
+        type: "date-only"
+        description: "horodatage de la dernière mise à jour des données en nombres\
+          \ de millisecondes depuis le 1 janvier 1970."
+        required: false
+      bk:
+        type: "boolean"
+        description: "(Pour usage futur)"
+        required: false
+      bl:
+        type: "boolean"
+        description: "(Pour usage futur)"
+        required: false
+      lat:
+        type: "number"
+        description: "latitude de la station selon le référentiel géodésique WGS84"
+        required: false
+      lng:
+        type: "number"
+        description: "longitude de la station selon le référentiel géodésique WGS84"
+        required: false
+      availableTerminals:
+        type: "integer"
+        description: "Nombre de bornes disponibles à cette station"
+        required: false
+      unavailableTerminals:
+        type: "integer"
+        description: "Nombre de bornes indisponibles à cette station"
+        required: false
+      availableBikes:
+        type: "integer"
+        description: "Nombre de vélos disponibles à cette station"
+        required: false
+      unavailableBikes:
+        type: "integer"
+        description: "Nombre de vélos indisponibles à cette station"
+        required: false
+securitySchemes:
+  Basic authentication:
+    type: "Basic Authentication"
+/activites-375e:
+  displayName: "Event"
+  get:
+    displayName: "Get events"
+    queryParameters:
+      de:
+        type: "string"
+        description: "Date du debut en format yyyy-MM-dd"
+        example: "2017-01-15"
+      au:
+        type: "string"
+        description: "Date de fin en format yyyy-MM-dd"
+        example: "2017-01-15"
+      rayon:
+        type: "integer"
+        description: "Rayon des activités à afficher, exprimer en mètres. Par défaut,\
+          \ 5000m"
+        required: false
+        example: 5000
+      lat:
+        type: "number"
+        description: "La latitude, au centre du rayon pour filtrer par défaut:  45.509039"
+      lng:
+        type: "integer"
+        description: "La longitude, au centre du rayon pour filtrer par défaut:  -73.5703185"
+    responses:
+      200:
+        body:
+          type: "array"
+          items:
+            type: "Event"
+          example:
+            value: "[\n    {\n        \"id\": 1,\n        \"name\": \"Evenement Test\
+              \ 1\",\n        \"descriptions\": \"Lorem lupus\",\n        \"arrondissement\"\
+              : \"Brossard\",\n        \"isFree\": null,\n        \"eventType\": null,\n\
+              \        \"isOutside\": null,\n        \"date\": null,\n        \"address\"\
+              : \"Parc poly-Arena\",\n        \"lat\": 45.448982,\n        \"lng\"\
+              : -73.458838,\n        \"dates\": [\n            \"2017-05-11T08:00:00\"\
+              ,\n            \"2017-05-12T08:00:00\",\n            \"2017-05-13T08:00:00\"\
+              ,\n            \"2017-05-14T08:00:00\",\n            \"2017-05-15T08:00:00\"\
+              ,\n            \"2017-05-16T08:00:00\",\n            \"2017-05-17T08:00:00\"\
+              \n        ]\n    }\n  ]"
+            strict: false
+      500: {}
+  post:
+    displayName: "Create event"
+    body:
+      type: "Event"
+      example:
+        value: "{\n        \"id\": 1,\n        \"name\": \"Evenement Test 1\",\n \
+          \       \"descriptions\": \"Lorem lupus\",\n        \"arrondissement\":\
+          \ \"Brossard\",\n        \"isFree\": null,\n        \"eventType\": null,\n\
+          \        \"isOutside\": null,\n        \"date\": null,\n        \"address\"\
+          : \"Parc poly-Arena\",\n        \"lat\": 45.448982,\n        \"lng\": -73.458838,\n\
+          \        \"dates\": [\n            \"2017-05-11T08:00:00\",\n          \
+          \  \"2017-05-12T08:00:00\",\n            \"2017-05-13T08:00:00\",\n    \
+          \        \"2017-05-14T08:00:00\",\n            \"2017-05-15T08:00:00\",\n\
+          \            \"2017-05-16T08:00:00\",\n            \"2017-05-17T08:00:00\"\
+          \n        ]\n    },"
+        strict: false
+    responses:
+      201: {}
+      500: {}
+/activites-375e/test/all:
+  displayName: "Event - getAll"
+  description: "Retourne tout les événements de la base de donnée"
+  get:
+    displayName: "Get all event"
+    responses:
+      200:
+        body:
+          type: "Event"
+          example:
+            value: "[{\n        \"id\": 1,\n        \"name\": \"Evenement Test 1\"\
+              ,\n        \"descriptions\": \"Lorem lupus\",\n        \"arrondissement\"\
+              : \"Brossard\",\n        \"isFree\": null,\n        \"eventType\": null,\n\
+              \        \"isOutside\": null,\n        \"date\": null,\n        \"address\"\
+              : \"Parc poly-Arena\",\n        \"lat\": 45.448982,\n        \"lng\"\
+              : -73.458838,\n        \"dates\": [\n            \"2017-05-11T08:00:00\"\
+              ,\n            \"2017-05-12T08:00:00\",\n            \"2017-05-13T08:00:00\"\
+              ,\n            \"2017-05-14T08:00:00\",\n            \"2017-05-15T08:00:00\"\
+              ,\n            \"2017-05-16T08:00:00\",\n            \"2017-05-17T08:00:00\"\
+              \n        ]\n    }]"
+            strict: false
+/activites-375e/test/import/json:
+  displayName: "Event - Import json"
+  description: "Lie et sérialize les données du fichier :http://guillemette.org/uqam/inf4375-e2017/assets/programmation-parcs.json"
+  get:
+    displayName: "Import from Json"
+    responses:
+      201: {}
+      500: {}
+/activites-375e/{eventId}:
+  displayName: "Event - Sort by id"
+  uriParameters:
+    eventId:
+      type: "string"
+  put:
+    displayName: "Update event"
+    responses:
+      200:
+        description: "resource updated successfully"
+      500:
+        description: "Error server"
+  delete:
+    displayName: "Delete event"
+    responses:
+      200:
+        description: "Events has been deleted successfully"
+      404: {}
+      500:
+        description: "Error server"
+/stations-bixi:
+  displayName: "Bixi - Search"
+  get:
+    displayName: "Get stations"
+    queryParameters:
+      min_bixi_dispo:
+        type: "string"
+        description: "Les stations ayant moins de vélo disponible que cette attribut\
+          \ ne sont pas retourner"
+        required: false
+      rayon:
+        type: "string"
+        description: "Les stations ce trouvant de la rayon seront retourné"
+        default: "1000"
+        required: false
+      lat:
+        type: "string"
+        description: "la  latitude du centre du rayon"
+        default: "45.509039"
+        required: false
+      lng:
+        type: "string"
+        description: "la  longitude du centre du rayon"
+        default: "-73.5703185"
+        required: false
+    responses:
+      200:
+        body:
+          type: "BixiStation"
+          example:
+            value: "[{\n        \"id\": 12,\n        \"name\": \"Métro St-Laurent\
+              \ (de Maisonneuve / St-Laurent)\",\n        \"terminalId\": \"6012\"\
+              ,\n        \"state\": 1,\n        \"lastUpdate\": \"2017-07-08\",\n\
+              \        \"lastServerCommunication\": \"2017-07-08\",\n        \"bk\"\
+              : false,\n        \"bl\": false,\n        \"lat\": 45.51066,\n     \
+              \   \"lng\": -73.56497,\n        \"availableTerminals\": 30,\n     \
+              \   \"unavailableTerminals\": 0,\n        \"availableBikes\": 19,\n\
+              \        \"unavailableBikes\": 0,\n        \"blocked\": false,\n   \
+              \     \"offline\": false,\n        \"suspend\": false\n    }]"
+            strict: false
+/stations-bixi{id}:
+  displayName: "Bixi - Sort by id"
+  uriParameters:
+    id:
+      type: "string"
+  get:
+    displayName: "find by Id"
+    responses:
+      200:
+        body:
+          type: "BixiStation"
+          example:
+            value: "{\n        \"id\": 12,\n        \"name\": \"Métro St-Laurent (de\
+              \ Maisonneuve / St-Laurent)\",\n        \"terminalId\": \"6012\",\n\
+              \        \"state\": 1,\n        \"lastUpdate\": \"2017-07-08\",\n  \
+              \      \"lastServerCommunication\": \"2017-07-08\",\n        \"bk\"\
+              : false,\n        \"bl\": false,\n        \"lat\": 45.51066,\n     \
+              \   \"lng\": -73.56497,\n        \"availableTerminals\": 30,\n     \
+              \   \"unavailableTerminals\": 0,\n        \"availableBikes\": 19,\n\
+              \        \"unavailableBikes\": 0,\n        \"blocked\": false,\n   \
+              \     \"offline\": false,\n        \"suspend\": false\n    }"
+            strict: false
+      404: {}
+/stations-bixi/test/all:
+  displayName: "Bixi - getAll"
+  get:
+    displayName: "Get all stations"
+    responses:
+      200:
+        body:
+          type: "BixiStation"
+          example:
+            value: "[{\n        \"id\": 12,\n        \"name\": \"Métro St-Laurent\
+              \ (de Maisonneuve / St-Laurent)\",\n        \"terminalId\": \"6012\"\
+              ,\n        \"state\": 1,\n        \"lastUpdate\": \"2017-07-08\",\n\
+              \        \"lastServerCommunication\": \"2017-07-08\",\n        \"bk\"\
+              : false,\n        \"bl\": false,\n        \"lat\": 45.51066,\n     \
+              \   \"lng\": -73.56497,\n        \"availableTerminals\": 30,\n     \
+              \   \"unavailableTerminals\": 0,\n        \"availableBikes\": 19,\n\
+              \        \"unavailableBikes\": 0,\n        \"blocked\": false,\n   \
+              \     \"offline\": false,\n        \"suspend\": false\n    }]"
+            strict: false
+/stations-bixi/import/json:
+  displayName: "Bixi - Import json"
+  get:
+    displayName: "Import from json"
